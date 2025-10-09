@@ -19,6 +19,9 @@ public class CourseCsvRepository implements CourseRepository {
     }
 
     @Override
+    public void removeCourse(String courseId) { courses.remove(courseId); }
+
+    @Override
     public Course getCourseById(String courseId) {
         return courses.get(courseId);
     }
@@ -28,10 +31,10 @@ public class CourseCsvRepository implements CourseRepository {
 
     @Override
     public void loadCourses() {
-        File file = new File(ConfigLoader.getInstance().getProperty("course.csv.file.path"));
+        File file = new File(ConfigLoader.getInstance().getProperty("courses.csv.file.path"));
 
         if (!file.exists()) {
-            throw new RuntimeException("failed to load course file");
+            throw new RuntimeException("Failed to load course file");
         }
 
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
@@ -49,7 +52,9 @@ public class CourseCsvRepository implements CourseRepository {
 
     @Override
     public void saveCourses() {
-        try (PrintWriter out = new PrintWriter(ConfigLoader.getInstance().getProperty("course.csv.file.path"))) {
+        if (courses.isEmpty()) return;
+
+        try (PrintWriter out = new PrintWriter(ConfigLoader.getInstance().getProperty("courses.csv.file.path"))) {
             for  (Course course : courses.values()) {
                 out.println(course.code() + "," + course.title() + "," + course.capacity());
             }
