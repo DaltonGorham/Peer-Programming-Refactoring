@@ -19,6 +19,9 @@ public class StudentCsvRepository implements StudentRepository {
     }
 
     @Override
+    public void removeStudent(String id) { students.remove(id); }
+
+    @Override
     public Student getStudentById(String id) {
         return students.get(id);
     }
@@ -52,6 +55,8 @@ public class StudentCsvRepository implements StudentRepository {
 
     @Override
     public void saveStudents() {
+        if (students.isEmpty()) return;
+
         try (PrintWriter out = new PrintWriter(ConfigLoader.getInstance().getProperty("students.csv.file.path"))) {
             for (Student student : students.values()) {
                 out.println(student.id() + "," + student.name() + "," + student.email());

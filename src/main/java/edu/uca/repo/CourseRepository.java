@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface CourseRepository {
     void addCourse(Course course);
+    void removeCourse(String courseId);
     Course getCourseById(String courseId);
     List<Course> getCourses();
 
