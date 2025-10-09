@@ -24,7 +24,10 @@ public class EnrollmentCsvRepository implements EnrollmentRepository {
     public void dropStudent(String studentId, String courseId) {
         if (enrollments.get(courseId).contains(studentId)) {
             enrollments.remove(studentId);
-            enrollments.get(courseId).add(waitlists.get(courseId).poll());
+            if (waitlists.containsKey(courseId) && !waitlists.get(courseId).isEmpty()) {
+                enrollments.putIfAbsent(courseId, new java.util.ArrayList<>());
+                enrollments.get(courseId).add(waitlists.get(courseId).poll());
+            }
         } else if (waitlists.get(courseId).contains(studentId)) {
             waitlists.get(courseId).remove(studentId);
         } else {
