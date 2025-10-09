@@ -9,6 +9,8 @@ import edu.uca.repo.csv.StudentCsvRepository;
 import java.util.List;
 
 public class RegistrationService {
+    private static final int MAX_COURSE_CAPACITY = 500;
+
     CourseCsvRepository courseRepo = new CourseCsvRepository();
     EnrollmentCsvRepository enrollmentRepo = new EnrollmentCsvRepository();
     StudentCsvRepository studentRepo = new StudentCsvRepository();
@@ -50,7 +52,7 @@ public class RegistrationService {
             throw new RuntimeException("Fields cannot be empty");
         }
 
-        if (capacity <= 0 || capacity > 500) {
+        if (capacity <= 0 || capacity > MAX_COURSE_CAPACITY) {
             throw new RuntimeException("Capacity must be between 1 and 500");
         }
 
@@ -84,13 +86,8 @@ public class RegistrationService {
     }
 
     public void dropStudent(String studentId, String courseId) {
-        if (Integer.parseInt(studentId) < 0) {
-            throw new RuntimeException("Student ID must be a positive integer");
-        }
-
-        if (Integer.parseInt(courseId) < 0) {
-            throw new RuntimeException("Course ID must be a positive integer");
-        }
+        checkId(studentId);
+        checkId(courseId);
 
         try {
             enrollmentRepo.dropStudent(studentId, courseId);
@@ -108,17 +105,13 @@ public class RegistrationService {
     }
 
     public int getEnrollments(String courseId) {
-        if (Integer.parseInt(courseId) < 0) {
-            throw new RuntimeException("Course ID must be a positive integer");
-        }
+        checkId(courseId);
 
         return enrollmentRepo.getEnrollmentCount(courseId);
     }
 
     public int getWaitlist(String courseId) {
-        if (Integer.parseInt(courseId) < 0) {
-            throw new RuntimeException("Course ID must be a positive integer");
-        }
+        checkId(courseId);
 
         return enrollmentRepo.getWaitlistCount(courseId);
     }
