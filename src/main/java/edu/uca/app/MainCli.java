@@ -38,7 +38,7 @@ public class MainCli {
 
     private static void addStudentUI(Scanner sc) {
         print("Student ID: ");
-        String id = sc.nextLine().trim();
+        String id = sc.nextLine().trim().toUpperCase();
         print("Name: ");
         String name = sc.nextLine().trim();
         print("Email: ");
@@ -54,7 +54,7 @@ public class MainCli {
 
     private static void addCourseUI(Scanner sc) {
         print("Course Code: ");
-        String code = sc.nextLine().trim();
+        String code = sc.nextLine().trim().toUpperCase();
         print("Title: ");
         String title = sc.nextLine().trim();
         print("Capacity: ");
@@ -70,9 +70,9 @@ public class MainCli {
 
     private static void enrollUI(Scanner sc) {
         print("Student ID: ");
-        String studentId = sc.nextLine().trim();
+        String studentId = sc.nextLine().trim().toUpperCase();
         print("Course ID: ");
-        String courseId = sc.nextLine().trim();
+        String courseId = sc.nextLine().trim().toUpperCase();
         try {
             regService.enrollStudent(studentId, courseId);
         } catch (RuntimeException e) {
@@ -84,9 +84,9 @@ public class MainCli {
 
     private static void dropUI(Scanner sc) {
         print("Student ID: ");
-        String studentId = sc.nextLine().trim();
+        String studentId = sc.nextLine().trim().toUpperCase();
         print("Course ID: ");
-        String courseId = sc.nextLine().trim();
+        String courseId = sc.nextLine().trim().toUpperCase();
         try {
             regService.dropStudent(studentId, courseId);
         } catch (RuntimeException e) {
