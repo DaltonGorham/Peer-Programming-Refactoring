@@ -9,6 +9,8 @@ import edu.uca.repo.csv.StudentCsvRepository;
 import java.util.List;
 
 public class RegistrationService {
+    private static final int MAX_COURSE_CAPACITY = 500;
+
     CourseCsvRepository courseRepo = new CourseCsvRepository();
     EnrollmentCsvRepository enrollmentRepo = new EnrollmentCsvRepository();
     StudentCsvRepository studentRepo = new StudentCsvRepository();
@@ -17,34 +19,56 @@ public class RegistrationService {
         loadData();
     }
 
-    public void addStudent(String id, String name, String email) {
-        if (studentRepo.getStudentById(id) != null) {
+    public void addStudent(String studentId, String name, String email) {
+        if (studentId.isEmpty() || name.isEmpty() || email.isEmpty()) {
+            throw new RuntimeException("Fields cannot be empty");
+        }
+
+        checkId(studentId);
+
+        if (!email.contains("@") || !email.contains(".")) {
+            throw new RuntimeException("Email must be valid");
+        }
+
+        if (studentRepo.getStudentById(studentId) != null) {
             throw new RuntimeException("Student with id already exists");
         }
 
-        studentRepo.addStudent(new edu.uca.model.Student(id, name, email));
+        studentRepo.addStudent(new edu.uca.model.Student(studentId, name, email));
     }
 
-    public void removeStudent(String id) {
-        if (studentRepo.getStudentById(id) == null) {
+    public void removeStudent(String studentId) {
+        checkId(studentId);
+
+        if (studentRepo.getStudentById(studentId) == null) {
             throw new RuntimeException("Student with id does not exist");
         }
-        studentRepo.removeStudent(id);
+
+        studentRepo.removeStudent(studentId);
     }
 
-    public void removeCourse(String id) {
-        courseRepo.removeCourse(id);
-        enrollmentRepo.removeEnrollmentsByCourse(id);
-    }
+    public void addCourse(String courseId, String title, int capacity) {
+        if (courseId.isEmpty() || title.isEmpty()) {
+            throw new RuntimeException("Fields cannot be empty");
+        }
 
-    public void addCourse(String code, String title, int capacity) {
-        if (courseRepo.getCourseById(code) != null) {
+        if (capacity <= 0 || capacity > MAX_COURSE_CAPACITY) {
+            throw new RuntimeException("Capacity must be between 1 and 500");
+        }
+
+        checkId(courseId);
+
+        if (courseRepo.getCourseById(courseId) != null) {
             throw new RuntimeException("Course with code already exists");
         }
-        courseRepo.addCourse(new edu.uca.model.Course(code, title, capacity));
+
+        courseRepo.addCourse(new edu.uca.model.Course(courseId, title, capacity));
     }
 
     public void enrollStudent(String studentId, String courseId) {
+        checkId(studentId);
+        checkId(courseId);
+
         int capacity = courseRepo.getCourseById(courseId).capacity();
         int enrolled = enrollmentRepo.getEnrollmentCount(courseId);
 
@@ -62,6 +86,9 @@ public class RegistrationService {
     }
 
     public void dropStudent(String studentId, String courseId) {
+        checkId(studentId);
+        checkId(courseId);
+
         try {
             enrollmentRepo.dropStudent(studentId, courseId);
         } catch (RuntimeException e) {
@@ -78,10 +105,14 @@ public class RegistrationService {
     }
 
     public int getEnrollments(String courseId) {
+        checkId(courseId);
+
         return enrollmentRepo.getEnrollmentCount(courseId);
     }
 
     public int getWaitlist(String courseId) {
+        checkId(courseId);
+
         return enrollmentRepo.getWaitlistCount(courseId);
     }
 
@@ -102,6 +133,22 @@ public class RegistrationService {
             enrollmentRepo.loadEnrollments();
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void checkId(String id) {
+        if (id.isEmpty()) {
+            throw new RuntimeException("ID cannot be empty");
+        }
+
+        try {
+            Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("ID must be an integer");
+        }
+
+        if (Integer.parseInt(id) < 0) {
+            throw new RuntimeException("ID must be a positive integer");
         }
     }
 }
