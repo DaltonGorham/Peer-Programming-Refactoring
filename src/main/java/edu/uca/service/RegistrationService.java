@@ -41,7 +41,7 @@ public class RegistrationService {
         checkStudentID(studentId);
 
         if (studentRepo.getStudentById(studentId) == null) {
-            throw new RuntimeException("Student with id does not exist");
+            throw new RuntimeException("Student with id: " + studentId + " does not exist");
         }
 
         studentRepo.removeStudent(studentId);
@@ -59,7 +59,7 @@ public class RegistrationService {
         checkCourseID(courseId);
 
         if (courseRepo.getCourseById(courseId) != null) {
-            throw new RuntimeException("Course with code already exists");
+            throw new RuntimeException("Course with code: " + courseId + "already exists");
         }
 
         courseRepo.addCourse(new edu.uca.model.Course(courseId, title, capacity));
@@ -69,17 +69,29 @@ public class RegistrationService {
         checkStudentID(studentId);
         checkCourseID(courseId);
 
-        int capacity = courseRepo.getCourseById(courseId).capacity();
+        Course course = courseRepo.getCourseById(courseId);
+        if (course == null) {
+            throw new RuntimeException("Course with id: " + courseId + " does not exist");
+        }
+
+        if (studentRepo.getStudentById(studentId) == null) {
+            throw new RuntimeException("Student with id: " + studentId + " does not exist");
+        }
+
+        int capacity = course.capacity();
         int enrolled = enrollmentRepo.getEnrollmentCount(courseId);
 
         if (enrolled == capacity) {
+            if (enrollmentRepo.getEnrollmentList(courseId).contains(studentId)) {
+                throw new RuntimeException("Student with id: " + studentId + " already enrolled");
+            }
             if (enrollmentRepo.getWaitlist(courseId).contains(studentId)) {
-                throw new RuntimeException("Student already on waitlist");
+                throw new RuntimeException("Student with id: " + studentId + " is already on waitlist");
             }
             enrollmentRepo.addToWaitlist(studentId, courseId);
         } else {
             if (enrollmentRepo.getEnrollmentList(courseId).contains(studentId)) {
-                throw new RuntimeException("Student already enrolled in course");
+                throw new RuntimeException("Student with id: " + studentId + " already enrolled");
             }
             enrollmentRepo.enrollStudent(studentId, courseId);
         }
@@ -88,13 +100,9 @@ public class RegistrationService {
     public void dropStudent(String studentId, String courseId) {
         checkStudentID(studentId);
         checkCourseID(courseId);
-
-        try {
-            enrollmentRepo.dropStudent(studentId, courseId);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-        }
+        enrollmentRepo.dropStudent(studentId, courseId);
     }
+
 
     public List<Student> getStudents() {
         return studentRepo.getStudents();

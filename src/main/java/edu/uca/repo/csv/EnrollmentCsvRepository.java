@@ -22,12 +22,12 @@ public class EnrollmentCsvRepository implements EnrollmentRepository {
 
     @Override
     public void dropStudent(String studentId, String courseId) {
-        if (enrollments.get(courseId).contains(studentId)) {
+        if (enrollments.containsKey(courseId) && enrollments.get(courseId).contains(studentId)) {
             enrollments.get(courseId).remove(studentId);
             if (waitlists.containsKey(courseId) && !waitlists.get(courseId).isEmpty()) {
                 enrollments.get(courseId).add(waitlists.get(courseId).poll());
             }
-        } else if (waitlists.get(courseId).contains(studentId)) {
+        } else if (waitlists.containsKey(courseId) && waitlists.get(courseId).contains(studentId)) {
             waitlists.get(courseId).remove(studentId);
         } else {
             throw new RuntimeException("Student not enrolled or waitlisted for course");

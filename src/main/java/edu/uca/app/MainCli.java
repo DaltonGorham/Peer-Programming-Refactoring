@@ -45,7 +45,9 @@ public class MainCli {
         String email = sc.nextLine().trim();
         try {
             regService.addStudent(id, name, email);
+            println("Successfully added student!");
         } catch (RuntimeException e) {
+            println("Failed to add student!");
             println(e.getMessage());
             return;
         }
@@ -61,7 +63,9 @@ public class MainCli {
         int capacity = Integer.parseInt(sc.nextLine().trim());
         try {
             regService.addCourse(code, title, capacity);
+            println("Successfully added course!");
         } catch (RuntimeException e) {
+            println("Failed to add course!");
             println(e.getMessage());
             return;
         }
@@ -75,7 +79,9 @@ public class MainCli {
         String courseId = sc.nextLine().trim().toUpperCase();
         try {
             regService.enrollStudent(studentId, courseId);
+            println("Successfully enrolled student!");
         } catch (RuntimeException e) {
+            println("Failed to enroll student!");
             println(e.getMessage());
             return;
         }
@@ -89,7 +95,9 @@ public class MainCli {
         String courseId = sc.nextLine().trim().toUpperCase();
         try {
             regService.dropStudent(studentId, courseId);
+            println("Successfully dropped student!");
         } catch (RuntimeException e) {
+            println("Failed to drop student!");
             println(e.getMessage());
             return;
         }
