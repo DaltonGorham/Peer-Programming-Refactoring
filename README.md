@@ -1,11 +1,12 @@
-# UCA Course Registration – Baseline (for Refactoring Assignment)
+# UCA Course Registration – Refactored
 
-This is a runnable but intentionally messy Java CLI app.  
-Your assignment: **Refactor** into clean layers (model, repo, service, ui).  
-Preserve existing behaviors: students, courses, enrollments, waitlists, drops.
+This is a refactored version of the original monolithic Java CLI application for managing student course registration at UCA. The system now follows a layered architecture with clear separation of concerns, modular design, and CSV-based persistence.
 
 ## Run
 ```bash
 mvn -q -DskipTests package
 java -jar target/course-registration-0.1.0.jar
 ```
+
+## Documentation
+All required documentation can be found in the docs\ directory at the root.
