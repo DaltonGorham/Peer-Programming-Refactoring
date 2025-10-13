@@ -1,0 +1,14 @@
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/util/ConfigLoader.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/repo/EnrollmentRepository.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/service/RegistrationService.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/util/Utilities.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/registration/Mainold.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/repo/csv/CourseCsvRepository.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/repo/StudentRepository.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/repo/CourseRepository.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/registration/Main.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/model/Course.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/app/MainCli.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/repo/csv/EnrollmentCsvRepository.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/model/Student.java
+/Users/daltongorham/Git/uca-course-registration/src/main/java/edu/uca/repo/csv/StudentCsvRepository.java
