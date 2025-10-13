@@ -38,14 +38,16 @@ public class MainCli {
 
     private static void addStudentUI(Scanner sc) {
         print("Student ID: ");
-        String id = sc.nextLine().trim();
+        String id = sc.nextLine().trim().toUpperCase();
         print("Name: ");
         String name = sc.nextLine().trim();
         print("Email: ");
         String email = sc.nextLine().trim();
         try {
             regService.addStudent(id, name, email);
+            println("Successfully added student!");
         } catch (RuntimeException e) {
+            println("Failed to add student!");
             println(e.getMessage());
             return;
         }
@@ -54,14 +56,16 @@ public class MainCli {
 
     private static void addCourseUI(Scanner sc) {
         print("Course Code: ");
-        String code = sc.nextLine().trim();
+        String code = sc.nextLine().trim().toUpperCase();
         print("Title: ");
         String title = sc.nextLine().trim();
         print("Capacity: ");
         int capacity = Integer.parseInt(sc.nextLine().trim());
         try {
             regService.addCourse(code, title, capacity);
+            println("Successfully added course!");
         } catch (RuntimeException e) {
+            println("Failed to add course!");
             println(e.getMessage());
             return;
         }
@@ -70,12 +74,14 @@ public class MainCli {
 
     private static void enrollUI(Scanner sc) {
         print("Student ID: ");
-        String studentId = sc.nextLine().trim();
+        String studentId = sc.nextLine().trim().toUpperCase();
         print("Course ID: ");
-        String courseId = sc.nextLine().trim();
+        String courseId = sc.nextLine().trim().toUpperCase();
         try {
             regService.enrollStudent(studentId, courseId);
+            println("Successfully enrolled student!");
         } catch (RuntimeException e) {
+            println("Failed to enroll student!");
             println(e.getMessage());
             return;
         }
@@ -84,12 +90,14 @@ public class MainCli {
 
     private static void dropUI(Scanner sc) {
         print("Student ID: ");
-        String studentId = sc.nextLine().trim();
+        String studentId = sc.nextLine().trim().toUpperCase();
         print("Course ID: ");
-        String courseId = sc.nextLine().trim();
+        String courseId = sc.nextLine().trim().toUpperCase();
         try {
             regService.dropStudent(studentId, courseId);
+            println("Successfully dropped student!");
         } catch (RuntimeException e) {
+            println("Failed to drop student!");
             println(e.getMessage());
             return;
         }

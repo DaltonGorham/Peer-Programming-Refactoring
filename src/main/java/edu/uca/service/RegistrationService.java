@@ -24,7 +24,7 @@ public class RegistrationService {
             throw new RuntimeException("Fields cannot be empty");
         }
 
-        checkId(studentId);
+        checkStudentID(studentId);
 
         if (!email.contains("@") || !email.contains(".")) {
             throw new RuntimeException("Email must be valid");
@@ -38,10 +38,10 @@ public class RegistrationService {
     }
 
     public void removeStudent(String studentId) {
-        checkId(studentId);
+        checkStudentID(studentId);
 
         if (studentRepo.getStudentById(studentId) == null) {
-            throw new RuntimeException("Student with id does not exist");
+            throw new RuntimeException("Student with id: " + studentId + " does not exist");
         }
 
         studentRepo.removeStudent(studentId);
@@ -56,45 +56,53 @@ public class RegistrationService {
             throw new RuntimeException("Capacity must be between 1 and 500");
         }
 
-        checkId(courseId);
+        checkCourseID(courseId);
 
         if (courseRepo.getCourseById(courseId) != null) {
-            throw new RuntimeException("Course with code already exists");
+            throw new RuntimeException("Course with code: " + courseId + "already exists");
         }
 
         courseRepo.addCourse(new edu.uca.model.Course(courseId, title, capacity));
     }
 
     public void enrollStudent(String studentId, String courseId) {
-        checkId(studentId);
-        checkId(courseId);
+        checkStudentID(studentId);
+        checkCourseID(courseId);
 
-        int capacity = courseRepo.getCourseById(courseId).capacity();
+        Course course = courseRepo.getCourseById(courseId);
+        if (course == null) {
+            throw new RuntimeException("Course with id: " + courseId + " does not exist");
+        }
+
+        if (studentRepo.getStudentById(studentId) == null) {
+            throw new RuntimeException("Student with id: " + studentId + " does not exist");
+        }
+
+        int capacity = course.capacity();
         int enrolled = enrollmentRepo.getEnrollmentCount(courseId);
 
         if (enrolled == capacity) {
+            if (enrollmentRepo.getEnrollmentList(courseId).contains(studentId)) {
+                throw new RuntimeException("Student with id: " + studentId + " already enrolled");
+            }
             if (enrollmentRepo.getWaitlist(courseId).contains(studentId)) {
-                throw new RuntimeException("Student already on waitlist");
+                throw new RuntimeException("Student with id: " + studentId + " is already on waitlist");
             }
             enrollmentRepo.addToWaitlist(studentId, courseId);
         } else {
             if (enrollmentRepo.getEnrollmentList(courseId).contains(studentId)) {
-                throw new RuntimeException("Student already enrolled in course");
+                throw new RuntimeException("Student with id: " + studentId + " already enrolled");
             }
             enrollmentRepo.enrollStudent(studentId, courseId);
         }
     }
 
     public void dropStudent(String studentId, String courseId) {
-        checkId(studentId);
-        checkId(courseId);
-
-        try {
-            enrollmentRepo.dropStudent(studentId, courseId);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-        }
+        checkStudentID(studentId);
+        checkCourseID(courseId);
+        enrollmentRepo.dropStudent(studentId, courseId);
     }
+
 
     public List<Student> getStudents() {
         return studentRepo.getStudents();
@@ -105,13 +113,13 @@ public class RegistrationService {
     }
 
     public int getEnrollments(String courseId) {
-        checkId(courseId);
+        checkCourseID(courseId);
 
         return enrollmentRepo.getEnrollmentCount(courseId);
     }
 
     public int getWaitlist(String courseId) {
-        checkId(courseId);
+        checkCourseID(courseId);
 
         return enrollmentRepo.getWaitlistCount(courseId);
     }
@@ -136,19 +144,35 @@ public class RegistrationService {
         }
     }
 
-    private void checkId(String id) {
+    private void checkCourseID(String id) {
         if (id.isEmpty()) {
-            throw new RuntimeException("ID cannot be empty");
+            throw new RuntimeException("Course ID cannot be empty");
         }
 
-        try {
-            Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("ID must be an integer");
+        if (!id.matches("^[A-Za-z]*\\d+$")) {
+            throw new RuntimeException("Course ID must contain alphanumeric characters (e.g., CSCI1440)");
         }
 
-        if (Integer.parseInt(id) < 0) {
-            throw new RuntimeException("ID must be a positive integer");
+        String numericId = id.replaceAll("[A-Za-z]", "");
+
+        if (Integer.parseInt(numericId) < 0 ) {
+            throw new RuntimeException("Course ID must be a positive number");
+        }
+    }
+
+    private void checkStudentID(String id) {
+        if (id.isEmpty()) {
+            throw new RuntimeException("Student ID cannot be empty");
+        }
+
+        if (!id.matches("^B?\\d+$")) {
+            throw new RuntimeException("Student ID must have digits, optionally starting with 'B/b'");
+        }
+
+        String numericId = id.startsWith("B") ? id.substring(1) : id;
+
+        if (Integer.parseInt(numericId) < 0) {
+            throw new RuntimeException("Student ID must be a positive integer");
         }
     }
 }
