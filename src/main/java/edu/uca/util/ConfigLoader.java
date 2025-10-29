@@ -32,4 +32,8 @@ public class ConfigLoader {
     public String getProperty(String key) {
         return prop.getProperty(key);
     }
+
+    public void setProperty(String key, String value) {
+        prop.setProperty(key, value);
+    }
 }
