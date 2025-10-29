@@ -10,10 +10,11 @@ import static edu.uca.util.Utilities.*;
 //This class is not a main class, it exists for cli implementation which
 //needs to be later used for the actual main function in Main.java
 public class MainCli {
-    static RegistrationService regService = new RegistrationService();
-    static Scanner sc = new Scanner(System.in);
+    private static final RegistrationService regService = new RegistrationService();
 
     public static void menuLoop() {
+        Scanner sc = new Scanner(System.in);
+
         println("\nMenu:");
         println("1) Add student");
         println("2) Add course");
@@ -115,7 +116,7 @@ public class MainCli {
         println("Courses:");
         for (Course c : regService.getCourses())
             println(" - " + c.code() + " " + c.title() + " cap=" + c.capacity()
-                    + " enrolled=" + regService.getEnrollments(c.code())
+                    + " enrolled=" + regService.getEnrollmentCount(c.code())
                     + " wait=" + regService.getWaitlist(c.code()));
     }
 }

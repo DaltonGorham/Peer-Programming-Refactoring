@@ -35,8 +35,22 @@ public class StudentCsvRepository implements StudentRepository {
     public void loadStudents() {
         File file = new File(ConfigLoader.getInstance().getProperty("students.csv.file.path"));
 
+        boolean createIfMissing = Boolean.parseBoolean(
+                ConfigLoader.getInstance().getProperty("csv.create-if-missing")
+        );
         if (!file.exists()) {
-            throw new RuntimeException("failed to load student file");
+            if (createIfMissing) {
+                try {
+                    if (file.createNewFile()) {
+                        Utilities.audit("Created new student file at " + file.getAbsolutePath());
+                        return;
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException("failed to create student file", e);
+                }
+            } else {
+                throw new RuntimeException("failed to load student file");
+            }
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {

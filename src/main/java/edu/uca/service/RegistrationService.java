@@ -112,10 +112,14 @@ public class RegistrationService {
         return courseRepo.getCourses();
     }
 
-    public int getEnrollments(String courseId) {
+    public int getEnrollmentCount(String courseId) {
         checkCourseID(courseId);
 
         return enrollmentRepo.getEnrollmentCount(courseId);
+    }
+
+    public List<String> getEnrollmentList(String courseId) {
+        return enrollmentRepo.getEnrollmentList(courseId);
     }
 
     public int getWaitlist(String courseId) {
