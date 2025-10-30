@@ -1,0 +1,16 @@
+edu/uca/app/MainCli.class
+edu/uca/registration/Main.class
+edu/uca/repo/CourseRepository.class
+edu/uca/model/Student.class
+edu/uca/repo/StudentRepository.class
+edu/uca/service/RegistrationService.class
+edu/uca/repo/csv/StudentCsvRepository.class
+edu/uca/repo/csv/CourseCsvRepository.class
+edu/uca/model/Course.class
+edu/uca/registration/Mainold$Course.class
+edu/uca/registration/Mainold.class
+edu/uca/repo/csv/EnrollmentCsvRepository.class
+edu/uca/util/ConfigLoader.class
+edu/uca/repo/EnrollmentRepository.class
+edu/uca/registration/Mainold$Student.class
+edu/uca/util/Utilities.class

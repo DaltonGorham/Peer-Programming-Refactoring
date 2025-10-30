@@ -33,8 +33,22 @@ public class CourseCsvRepository implements CourseRepository {
     public void loadCourses() {
         File file = new File(ConfigLoader.getInstance().getProperty("courses.csv.file.path"));
 
+        boolean createIfMissing = Boolean.parseBoolean(
+                ConfigLoader.getInstance().getProperty("csv.create-if-missing")
+        );
         if (!file.exists()) {
-            throw new RuntimeException("Failed to load course file");
+            if (createIfMissing) {
+                try {
+                    if (file.createNewFile()) {
+                        Utilities.audit("Created new course file at " + file.getAbsolutePath());
+                        return;
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException("failed to create course file", e);
+                }
+            } else {
+                throw new RuntimeException("Failed to load course file");
+            }
         }
 
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {

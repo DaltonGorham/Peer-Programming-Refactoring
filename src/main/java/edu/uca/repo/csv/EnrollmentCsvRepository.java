@@ -76,8 +76,22 @@ public class EnrollmentCsvRepository implements EnrollmentRepository {
     public void loadEnrollments() {
         File file = new File(ConfigLoader.getInstance().getProperty("enrollments.csv.file.path"));
 
+        boolean createIfMissing = Boolean.parseBoolean(
+                ConfigLoader.getInstance().getProperty("csv.create-if-missing")
+        );
         if (!file.exists()) {
-            throw new RuntimeException("failed to load enrollment file");
+            if (createIfMissing) {
+                try {
+                    if (file.createNewFile()) {
+                        Utilities.audit("Created new enrollment file at " + file.getAbsolutePath());
+                        return;
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException("failed to create enrollment file", e);
+                }
+            } else {
+                throw new RuntimeException("failed to load enrollment file");
+            }
         }
 
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
