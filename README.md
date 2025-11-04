@@ -10,3 +10,12 @@ java -jar target/course-registration-0.1.0.jar
 
 ## Documentation
 All required documentation can be found in the docs\ directory at the root.
+
+
+## Testing
+
+To run the automated tests, run:
+
+```bash
+mvn test
+```
